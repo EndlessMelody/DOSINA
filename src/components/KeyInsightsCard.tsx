@@ -27,7 +27,7 @@ export function KeyInsightsCard() {
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-8" style={{ boxShadow: 'var(--shadow-md)' }}>
       <h2 className="text-[18px] font-semibold tracking-tight text-gray-900 mb-6">
-        Key Insights
+        Metric Drivers
       </h2>
       
       <div className="space-y-3">

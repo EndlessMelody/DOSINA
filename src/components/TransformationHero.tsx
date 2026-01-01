@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles, FileText, BarChart3, TrendingUp, TrendingDown, DollarSign, AlertCircle } from 'lucide-react';
+import { ArrowRight, Sparkles, FileText, BarChart3, TrendingUp, DollarSign, AlertCircle } from 'lucide-react';
 
 export function TransformationHero() {
   return (
@@ -145,7 +145,7 @@ export function TransformationHero() {
                   </div>
                   <div className="text-[20px] font-bold text-gray-900 mb-1">$192K</div>
                   <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[9px] font-bold border border-rose-200">
-                    <TrendingDown className="w-2.5 h-2.5" /> -33%
+                    ↓ -33%
                   </span>
                 </div>
               </div>
@@ -209,7 +209,7 @@ export function TransformationHero() {
       {/* Bottom emphasis text */}
       <div className="mt-12 text-center">
         <p className="text-[14px] text-gray-600">
-          From <span className="font-semibold text-gray-900">a ton of pages of complex reports</span> to{' '}
+          From <span className="font-semibold text-gray-900">50-page complex reports</span> to{' '}
           <span className="font-semibold text-blue-600">interactive visual dashboards</span> in seconds
         </p>
       </div>

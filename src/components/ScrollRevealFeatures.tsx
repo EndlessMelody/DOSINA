@@ -1,9 +1,29 @@
 import { Upload, Sparkles, BarChart3, Zap, Shield, Clock } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, forwardRef } from 'react';
 
-export function ScrollRevealFeatures() {
+interface ScrollRevealFeaturesProps {
+  triggerAnimation?: boolean;
+}
+
+export const ScrollRevealFeatures = forwardRef<HTMLDivElement, ScrollRevealFeaturesProps>(
+  ({ triggerAnimation = false }, ref) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Combine external ref with internal ref
+  useEffect(() => {
+    if (ref && typeof ref === 'object') {
+      ref.current = sectionRef.current;
+    }
+  }, [ref]);
+
+  useEffect(() => {
+    if (triggerAnimation) {
+      setShouldAnimate(true);
+      setTimeout(() => setShouldAnimate(false), 1000);
+    }
+  }, [triggerAnimation]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -94,7 +114,7 @@ export function ScrollRevealFeatures() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
         {features.map((feature, index) => {
           const Icon = feature.icon;
           const colors = getColorClasses(feature.color);
@@ -102,19 +122,28 @@ export function ScrollRevealFeatures() {
           return (
             <div
               key={index}
-              className={`bg-white border border-gray-200 rounded-xl p-6 transition-all duration-700 hover:shadow-lg hover:border-gray-300 ${
-                isVisible 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-8'
+              className={`bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-gray-300 ${
+                shouldAnimate 
+                  ? 'opacity-0 translate-y-2' 
+                  : isVisible 
+                    ? 'opacity-100 translate-y-0' 
+                    : 'opacity-0 translate-y-8'
               }`}
               style={{ 
-                transitionDelay: isVisible ? feature.delay : '0ms',
-                boxShadow: 'var(--shadow-sm)'
+                boxShadow: 'var(--shadow-sm)',
+                ...(shouldAnimate ? {
+                  animation: `featureCardReveal 220ms ease-out ${index * 60}ms forwards`
+                } : {
+                  transitionProperty: 'opacity, transform',
+                  transitionDuration: '700ms',
+                  transitionTimingFunction: 'ease-out',
+                  transitionDelay: isVisible ? feature.delay : '0ms'
+                })
               }}
             >
               <div className={`w-12 h-12 bg-gradient-to-br ${colors.gradient} rounded-xl flex items-center justify-center mb-4`} 
                    style={{ boxShadow: `0 4px 12px -2px ${feature.color === 'blue' ? 'rgb(37 99 235 / 0.3)' : 'rgb(0 0 0 / 0.2)'}` }}>
-                <Icon className="w-6 h-6 text-white" />
+                <Icon className="w-6 h-6 text-white" strokeWidth={1.5} />
               </div>
               <h3 className="text-[16px] font-semibold text-gray-900 mb-2">
                 {feature.title}
@@ -126,6 +155,20 @@ export function ScrollRevealFeatures() {
           );
         })}
       </div>
+
+      {/* Animation Keyframes */}
+      <style>{`
+        @keyframes featureCardReveal {
+          0% {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </section>
   );
-}
+});

@@ -7,7 +7,11 @@ interface SummaryItem {
   metric?: string;
 }
 
-export function ExecutiveSummary() {
+interface ExecutiveSummaryProps {
+  isEmbedded?: boolean;
+}
+
+export function ExecutiveSummary({ isEmbedded = false }: ExecutiveSummaryProps) {
   const summaryItems: SummaryItem[] = [
     {
       type: 'positive',
@@ -84,17 +88,19 @@ export function ExecutiveSummary() {
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6" style={{ boxShadow: 'var(--shadow-md)' }}>
-      <div className="flex items-center justify-between mb-5">
-        <div>
-          <h2 className="text-[18px] font-semibold tracking-tight text-gray-900">
-            Executive Summary
-          </h2>
-          <p className="text-[12px] text-gray-500 mt-0.5">
-            Top 5 insights you need to know
-          </p>
+    <div className={isEmbedded ? '' : 'bg-white rounded-lg border border-gray-200 p-6'} style={isEmbedded ? {} : { boxShadow: 'var(--shadow-md)' }}>
+      {!isEmbedded && (
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="text-[18px] font-semibold tracking-tight text-gray-900">
+              Executive Summary
+            </h2>
+            <p className="text-[12px] text-gray-500 mt-0.5">
+              Top 5 insights you need to know
+            </p>
+          </div>
         </div>
-      </div>
+      )}
       
       <div className="space-y-2.5">
         {summaryItems.map((item, index) => {

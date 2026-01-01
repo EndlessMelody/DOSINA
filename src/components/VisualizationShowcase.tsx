@@ -16,20 +16,79 @@ export function VisualizationShowcase() {
         'Forecast projections'
       ],
       chart: (
-        <div className="flex items-end justify-between gap-2 h-32 px-3">
-          {[40, 55, 70, 85, 95].map((height, idx) => (
-            <div key={idx} className="flex-1 flex flex-col items-center gap-1.5">
-              <div 
-                className="w-full bg-gradient-to-t from-blue-600 to-blue-400 rounded-t transition-all duration-700 hover:from-blue-500 hover:to-blue-300"
-                style={{ 
-                  height: `${hoveredCard === 0 ? height : height * 0.8}%`,
-                  transitionDelay: `${idx * 50}ms`
-                }}
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/20 rounded-t"></div>
-              </div>
-            </div>
-          ))}
+        <div className="relative h-32 px-3 py-2">
+          <svg viewBox="0 0 400 120" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              {/* Gradient for primary area fill */}
+              <linearGradient id="primaryAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#1A56DB" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#1A56DB" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            
+            {/* Secondary line (Previous Year) - Gray dashed, behind */}
+            <path
+              d="M 20 75 L 120 68 L 220 60 L 320 55 L 380 52"
+              fill="none"
+              stroke="#9CA3AF"
+              strokeWidth="1.5"
+              strokeDasharray="4 3"
+              opacity="0.6"
+            />
+            
+            {/* Primary area fill (Current Year) */}
+            <path
+              d="M 20 80 L 120 65 L 220 45 L 304 28 L 380 20 L 380 100 L 20 100 Z"
+              fill="url(#primaryAreaGradient)"
+            />
+            
+            {/* Primary line (Current Year) - Solid part */}
+            <path
+              d="M 20 80 L 120 65 L 220 45 L 304 28"
+              fill="none"
+              stroke="#1A56DB"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={hoveredCard === 0 ? 'opacity-100' : 'opacity-90'}
+              style={{ transition: 'opacity 300ms' }}
+            />
+            
+            {/* Primary line (Current Year) - Forecast dotted part (last 20%) */}
+            <path
+              d="M 304 28 L 380 20"
+              fill="none"
+              stroke="#1A56DB"
+              strokeWidth="2.5"
+              strokeDasharray="4 4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={hoveredCard === 0 ? 'opacity-100' : 'opacity-90'}
+              style={{ transition: 'opacity 300ms' }}
+            />
+            
+            {/* Hover peak indicator */}
+            {hoveredCard === 0 && (
+              <>
+                {/* Peak dot */}
+                <circle cx="380" cy="20" r="4" fill="#1A56DB" stroke="white" strokeWidth="2" />
+                
+                {/* Peak label background */}
+                <rect x="310" y="8" width="62" height="20" rx="4" fill="white" opacity="0.95" />
+                
+                {/* Peak label text */}
+                <text x="341" y="21" fontSize="11" fontWeight="700" fill="#1A56DB" textAnchor="middle" fontFamily="Inter, sans-serif">
+                  $2.4M
+                </text>
+              </>
+            )}
+            
+            {/* X-axis labels (Q1, Q2, Q3, Q4) */}
+            <text x="20" y="115" fontSize="10" fill="#9CA3AF" textAnchor="start" fontFamily="Inter, sans-serif">Q1</text>
+            <text x="120" y="115" fontSize="10" fill="#9CA3AF" textAnchor="middle" fontFamily="Inter, sans-serif">Q2</text>
+            <text x="220" y="115" fontSize="10" fill="#9CA3AF" textAnchor="middle" fontFamily="Inter, sans-serif">Q3</text>
+            <text x="380" y="115" fontSize="10" fill="#9CA3AF" textAnchor="end" fontFamily="Inter, sans-serif">Q4</text>
+          </svg>
         </div>
       )
     },
@@ -192,16 +251,16 @@ export function VisualizationShowcase() {
           return (
             <div
               key={idx}
-              className={`bg-gradient-to-br ${colors.bg} border ${colors.border} rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group`}
+              className={`bg-gradient-to-br ${colors.bg} rounded-xl overflow-hidden transition-all duration-300 cursor-pointer group border border-[#E5E7EB] ${hoveredCard === idx ? '-translate-y-1' : 'translate-y-0'}`}
               style={{ 
-                boxShadow: hoveredCard === idx ? colors.shadow : '0 1px 3px rgb(0 0 0 / 0.05)',
+                boxShadow: hoveredCard === idx ? '0 12px 24px -4px rgb(0 0 0 / 0.12), 0 4px 12px -2px rgb(0 0 0 / 0.08)' : '0 1px 3px rgb(0 0 0 / 0.05)',
               }}
               onMouseEnter={() => setHoveredCard(idx)}
               onMouseLeave={() => setHoveredCard(null)}
             >
               {/* Header */}
-              <div className="p-6 pb-4">
-                <div className={`w-12 h-12 ${colors.iconBg} rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 ${hoveredCard === idx ? 'scale-110' : 'scale-100'}`}>
+              <div className="p-7">
+                <div className={`w-12 h-12 ${colors.iconBg} rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 ${hoveredCard === idx ? 'scale-110' : 'scale-100'}`}>
                   <Icon className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="text-[16px] font-bold text-gray-900 mb-3">
