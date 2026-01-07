@@ -202,8 +202,8 @@ export function ExpenseBreakdownChart({ comparisonMode = 'single' }: ExpenseBrea
         }}
       >
         <div className="relative">
-          {/* Key Takeaway Badge - Top Right */}
-          <div className="absolute top-0 right-0 flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 max-w-[280px]">
+          {/* Key Takeaway Badge - Top Left */}
+          <div className="absolute top-0 left-0 flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 max-w-[280px]">
             <Info className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
             <div>
               <div className="text-[11px] font-semibold text-blue-900 mb-0.5">Key Takeaway</div>

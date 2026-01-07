@@ -13,7 +13,9 @@ import { InsightsSidebar } from './InsightsSidebar';
 import { DataTableToggle } from './DataTableToggle';
 import { RevenueDataTable } from './RevenueDataTable';
 import { BenchmarkIndicator } from './BenchmarkIndicator';
+import { ExecutiveFinancialSnapshot } from './ExecutiveFinancialSnapshot';
 import { useState } from 'react';
+import { TrendingUp, Percent, Activity } from 'lucide-react';
 
 interface DashboardProps {
   onBackToLanding: () => void;
@@ -156,102 +158,232 @@ export function Dashboard({ onBackToLanding }: DashboardProps) {
           }
         `}</style>
 
-        {/* Title Section with Controls */}
+        {/* Title Section */}
         <div className="mb-8">
-          <div className="flex items-start justify-between mb-6">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-white mb-4" style={{ boxShadow: 'var(--shadow-sm)' }}>
-                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
-                <span className="text-[12px] text-gray-700 font-medium">
-                  Real-time Financial Analytics
-                </span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-white mb-4" style={{ boxShadow: 'var(--shadow-sm)' }}>
+            <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
+            <span className="text-[12px] text-gray-700 font-medium">
+              Executive Financial Snapshot
+            </span>
+          </div>
+          
+          <h1 className="text-[40px] leading-[1.1] font-semibold tracking-[-0.03em] text-gray-900 mb-2">
+            Q4 2021 Financial Overview
+          </h1>
+          <p className="text-[16px] text-gray-500">
+            {currentPeriod} Report • AI-Generated Summary
+          </p>
+        </div>
+
+        {/* Executive KPI Cards */}
+        <div className="grid grid-cols-3 gap-6 mb-8">
+          {/* Revenue Growth Card */}
+          <div 
+            className="bg-white rounded-lg border border-gray-200 p-6 transition-all duration-200"
+            style={{ boxShadow: 'var(--shadow-md)' }}
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-emerald-600" />
               </div>
               
-              <h1 className="text-[40px] leading-[1.1] font-semibold tracking-[-0.03em] text-gray-900 mb-2">
-                Company Financial Overview
-              </h1>
-              <p className="text-[16px] text-gray-500">
-                {currentPeriod} Report • Last updated 2 hours ago
-              </p>
+              <div className="px-2.5 py-1 rounded-md text-[11px] font-semibold border bg-emerald-50 border-emerald-200 text-emerald-700">
+                ↑ +12% QoQ
+              </div>
             </div>
-
-            <ComparisonToggle onModeChange={setComparisonMode} />
+            
+            <div className="text-[12px] text-gray-500 font-medium mb-2 uppercase tracking-wide">
+              Revenue Growth
+            </div>
+            
+            <div className="flex items-baseline gap-2 mb-1">
+              <span className="text-[32px] font-bold text-gray-900 tracking-tight">
+                +12%
+              </span>
+              <span className="text-[15px] text-gray-500">
+                QoQ
+              </span>
+            </div>
+            
+            <div className="text-[12px] text-gray-500">
+              Positive growth trajectory
+            </div>
           </div>
-        </div>
 
-        {/* Grouped Filters + KPI Section */}
-        <div 
-          className="bg-[#F9FAFB] border border-[#E5E7EB] rounded-xl p-5 mb-6"
-          style={{ boxShadow: 'var(--shadow-sm)' }}
-        >
-          {/* Quick Filters - Horizontally aligned at top */}
-          <div className="mb-4">
-            <QuickFilters activeFilters={activeFilters} onFilterChange={handleFilterChange} />
-          </div>
-
-          {/* Key Metrics Overview with embedded Executive Summary */}
-          <KeyMetricsOverview comparisonMode={comparisonMode} triggerShimmer={triggerShimmer} />
-        </div>
-
-        {/* Benchmark Indicators */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
-          <div style={{ opacity: viewMode === 'risk' ? 0.3 : 1, ...transitionStyle }}>
-            <BenchmarkIndicator metric="Net Margin" value={8} industryAverage={10.5} unit="%" />
-          </div>
-          <div style={{ opacity: viewMode === 'risk' ? 0.3 : 1, ...transitionStyle }}>
-            <BenchmarkIndicator metric="ROE" value={14.2} industryAverage={12.0} unit="%" />
-          </div>
-          <div style={{ opacity: viewMode === 'risk' ? 0.3 : 1, ...transitionStyle }}>
-            <BenchmarkIndicator metric="Current Ratio" value={1.8} industryAverage={2.0} unit="" />
-          </div>
-          <div style={{ opacity: viewMode === 'risk' ? 0.3 : 1, ...transitionStyle }}>
-            <BenchmarkIndicator metric="Revenue Growth" value={15} industryAverage={8.5} unit="%" />
-          </div>
-        </div>
-
-        {/* Financial Health Score - Standalone - Risk card, stays at full opacity */}
-        <div className="mb-6" style={{ ...transitionStyle }}>
-          <FinancialHealthScore score={68} trend="down" previousScore={75} />
-        </div>
-
-        {/* Action Recommendations - High Priority - Risk card, stays at full opacity */}
-        <div className="mb-6" style={{ ...transitionStyle }}>
-          <ActionRecommendations />
-        </div>
-
-        {/* Detailed Analytics - Two Column Grid */}
-        <div className="grid lg:grid-cols-2 gap-6 mb-6">
-          {/* Revenue Chart with Metric Drivers below it */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg border border-gray-200 p-8" style={{ boxShadow: 'var(--shadow-md)' }}>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-[18px] font-semibold tracking-tight text-gray-900">
-                  Revenue & Net Profit
-                </h2>
-                <DataTableToggle view={revenueView} onViewChange={setRevenueView} />
+          {/* Profit Margin Card */}
+          <div 
+            className="bg-white rounded-lg border border-gray-200 p-6 transition-all duration-200"
+            style={{ boxShadow: 'var(--shadow-md)' }}
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center">
+                <Percent className="w-5 h-5 text-amber-600" />
               </div>
               
-              {revenueView === 'chart' ? <RevenueChart comparisonMode={comparisonMode} showRevenue={showRevenueInChart} /> : <RevenueDataTable />}
-              
-              <p className="text-[13px] leading-[1.5] text-gray-500 mt-6">
-                Revenue shows consistent growth trajectory, while net profit experienced a decline in Q4 due to increased operational costs.
-              </p>
+              <div className="px-2.5 py-1 rounded-md text-[11px] font-semibold border bg-rose-50 border-rose-200 text-rose-700">
+                ↓ -1.5 pts
+              </div>
             </div>
-
-            {/* Metric Drivers - Positioned below the chart it explains */}
-            <KeyInsightsCard />
+            
+            <div className="text-[12px] text-gray-500 font-medium mb-2 uppercase tracking-wide">
+              Profit Margin
+            </div>
+            
+            <div className="flex items-baseline gap-2 mb-1">
+              <span className="text-[32px] font-bold text-gray-900 tracking-tight">
+                8.6%
+              </span>
+            </div>
+            
+            <div className="text-[12px] text-gray-500">
+              Down from 10.1%
+            </div>
           </div>
 
-          {/* Financial Summary on the right */}
-          <FinancialSummaryCard />
+          {/* Cash Runway Card */}
+          <div 
+            className="bg-white rounded-lg border border-gray-200 p-6 transition-all duration-200"
+            style={{ boxShadow: 'var(--shadow-md)' }}
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
+                <Activity className="w-5 h-5 text-red-600" />
+              </div>
+              
+              <div className="px-2.5 py-1 rounded-md text-[11px] font-semibold border bg-rose-50 border-rose-200 text-rose-700">
+                Critical
+              </div>
+            </div>
+            
+            <div className="text-[12px] text-gray-500 font-medium mb-2 uppercase tracking-wide">
+              Cash Runway
+            </div>
+            
+            <div className="flex items-baseline gap-2 mb-1">
+              <span className="text-[32px] font-bold text-gray-900 tracking-tight">
+                6.2
+              </span>
+              <span className="text-[15px] text-gray-500">
+                months
+              </span>
+            </div>
+            
+            <div className="text-[12px] text-gray-500">
+              Requires immediate attention
+            </div>
+          </div>
         </div>
 
-        {/* Bottom Section - Expense Breakdown */}
-        <div className="bg-white rounded-lg border border-gray-200 p-8" style={{ boxShadow: 'var(--shadow-md)' }}>
-          <h2 className="text-[18px] font-semibold tracking-tight text-gray-900 mb-6">
-            Expense Breakdown
-          </h2>
-          <ExpenseBreakdownChart comparisonMode={comparisonMode} />
+        {/* Charts Section - Two Column Grid */}
+        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+          {/* Revenue, Cost, Profit Trend */}
+          <div className="bg-white rounded-lg border border-gray-200 p-8" style={{ boxShadow: 'var(--shadow-md)' }}>
+            <h2 className="text-[18px] font-semibold tracking-tight text-gray-900 mb-6">
+              Revenue, Cost & Profit Trend
+            </h2>
+            
+            <RevenueChart comparisonMode="single" showRevenue={true} />
+            
+            <p className="text-[13px] leading-[1.5] text-gray-500 mt-6">
+              Revenue growing steadily while costs increase faster, compressing profit margins quarter over quarter.
+            </p>
+          </div>
+
+          {/* Cost Structure Breakdown */}
+          <div className="bg-white rounded-lg border border-gray-200 p-8" style={{ boxShadow: 'var(--shadow-md)' }}>
+            <h2 className="text-[18px] font-semibold tracking-tight text-gray-900 mb-6">
+              Cost Structure Breakdown
+            </h2>
+            <ExpenseBreakdownChart comparisonMode="single" />
+            
+            <p className="text-[13px] leading-[1.5] text-gray-500 mt-6">
+              Operating expenses represent the largest cost category, with increasing pressure on profitability.
+            </p>
+          </div>
+        </div>
+
+        {/* Executive Insights Section */}
+        <div className="bg-white rounded-lg border border-gray-200 p-8 mb-8" style={{ boxShadow: 'var(--shadow-md)' }}>
+          <div className="flex items-center gap-2 mb-6">
+            <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+              <TrendingUp className="w-4 h-4 text-blue-600" />
+            </div>
+            <h2 className="text-[18px] font-semibold tracking-tight text-gray-900">
+              Key Executive Insights
+            </h2>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-emerald-500 flex-shrink-0"></div>
+                <p className="text-[14px] leading-[1.7] text-gray-700">
+                  <span className="font-semibold">Revenue growth</span> continues with +12% QoQ increase, demonstrating strong market demand and effective sales execution
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-amber-500 flex-shrink-0"></div>
+                <p className="text-[14px] leading-[1.7] text-gray-700">
+                  <span className="font-semibold">Margin compression</span> from 10.1% to 8.6% signals rising cost pressure requiring strategic cost management
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0"></div>
+                <p className="text-[14px] leading-[1.7] text-gray-700">
+                  <span className="font-semibold">Cash flow risk</span> with only 6.2 months runway—immediate action required to extend operational timeline
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="mt-1 w-1.5 h-1.5 rounded-full bg-gray-400 flex-shrink-0"></div>
+                <p className="text-[14px] leading-[1.7] text-gray-700">
+                  <span className="font-semibold">Cost pressure</span> as operating expenses grow faster than revenue, necessitating efficiency optimization
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* AI Narrative Block */}
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-200 p-8" style={{ boxShadow: 'var(--shadow-md)' }}>
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-3">
+                <h3 className="text-[16px] font-semibold text-gray-900">AI Financial Narrative</h3>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-100 border border-blue-200">
+                  <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse" style={{ animationDuration: '2s' }}></div>
+                  <span className="text-[10px] font-semibold text-blue-700 uppercase tracking-wide">
+                    AI-Generated
+                  </span>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <p className="text-[15px] leading-[1.8] text-gray-800 font-medium">
+                  "The business is experiencing revenue growth; however, rising costs are compressing profit margins. If expenses are not controlled, cash flow may become a critical risk within the next six months."
+                </p>
+                
+                <div className="flex items-start gap-2 pt-4 border-t border-blue-200">
+                  <svg className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <p className="text-[13px] leading-[1.6] text-gray-700">
+                    <span className="font-semibold text-amber-700">Recommended Action:</span> Immediate cost optimization and cash flow management strategies should be prioritized to ensure operational sustainability.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </main>
     </div>
